@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -40,12 +41,35 @@ class _HomeState extends State<Home> {
                   buttonColor: Colors.blue,
                   buttonText: 'Set Current Location',
                   onPicked: (pickedData) {
-                    Navigator.pop(context); //popping modal bottom sheet
-                    setState(() {
-                      locationaddress='';
-                      locationaddress+="Votre stand est désormais placé à l'adresse: ";
-                      locationaddress+=pickedData.address;
-                    });
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Confirmation"),
+                          content: const Text("Confimez-vous la position choisie ?"),
+                          actions: [
+                            TextButton(
+                              child: const Text("Annuler"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            TextButton(
+                              child: const Text("Oui"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                setState(() {
+                                  locationaddress = '';
+                                  locationaddress += "Votre stand est désormais placé à l'adresse: ";
+                                  locationaddress += pickedData.address;
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }),
 
             ),
