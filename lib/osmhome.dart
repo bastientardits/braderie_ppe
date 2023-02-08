@@ -9,20 +9,51 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String address='';
+  String locationaddress='Pick Location';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body:OpenStreetMapSearchAndPick(
-          center: LatLong(48.858370, 2.294481),
-          buttonColor: Colors.blue,
-          buttonText: 'Set Current Location',
-          onPicked: (pickedData) {
-                print(pickedData.address);
-          })
+      body:Center(
+        child: Container(
+          child: InkWell(
+        child: Text(locationaddress),
+        onTap: (){
+          _showModal(context);
+        }),
+    ),
+      )
     );
   }
-}
+  void _showModal(BuildContext context){
+    showModalBottomSheet(
+        context: context,
+        builder: (context){
+          return Container(
+            height: 600,
+            //color: Colors.red,
+            child: Center(
+              child: OpenStreetMapSearchAndPick(
+                  center: LatLong(50.6371, 3.0530),
+                  buttonColor: Colors.blue,
+                  buttonText: 'Set Current Location',
+                  onPicked: (pickedData) {
+                    Navigator.pop(context); //popping modal bottom sheet
+                    setState(() {
+                      locationaddress='';
+                      locationaddress+="Votre stand est désormais placé à l'adresse: ";
+                      locationaddress+=pickedData.address;
+                    });
+                  }),
+
+            ),
+          );
+        });
+  }
+ }
+
+//modal bottom sheet
+
+
