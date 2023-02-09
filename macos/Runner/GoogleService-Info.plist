@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>762457578824-dbjd9j73m12pfk4sq228lsfnujtei5i8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.762457578824-dbjd9j73m12pfk4sq228lsfnujtei5i8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDIQD1ryX_p96P-tB9me4olR5HBLXsba7Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>762457578824</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.braderiePpe</string>
+	<key>PROJECT_ID</key>
+	<string>braderieppe</string>
+	<key>STORAGE_BUCKET</key>
+	<string>braderieppe.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:762457578824:ios:4627152f254de91cb8277d</string>
+	<key>DATABASE_URL</key>
+	<string>https://braderieppe-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>

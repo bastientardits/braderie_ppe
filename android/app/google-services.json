@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "762457578824",
+    "firebase_url": "https://braderieppe-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "braderieppe",
+    "storage_bucket": "braderieppe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762457578824:android:61cdd14fd117a3d0b8277d",
+        "android_client_info": {
+          "package_name": "com.example.braderie_ppe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "762457578824-042ef92ltpi9m6tc0jnif894o6cogu1l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIQZi8KJeAG3ew35FSehJy8_CnomibIx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "762457578824-042ef92ltpi9m6tc0jnif894o6cogu1l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
