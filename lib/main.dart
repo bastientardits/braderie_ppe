@@ -1,5 +1,7 @@
+import 'package:braderie_ppe/bottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 import 'osmhome.dart';
+import 'bottomNavigationBar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
     // is not restarted.
     primarySwatch: Colors.blue,
     ),
-    home: const Home(),
+    home: const NavBar(),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
+import 'bottomNavigationBar.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,8 +14,7 @@ class _HomeState extends State<Home> {
   String locationaddress='Pick Location';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -28,8 +29,7 @@ class _HomeState extends State<Home> {
             )
           ],
         ),
-      )
-    );
+      );
   }
 
 
