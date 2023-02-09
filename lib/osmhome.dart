@@ -25,30 +25,6 @@ class _HomeState extends State<Home> {
                       _showModal(context);
                     }),
               ),
-            ),
-            SizedBox(width: 10),
-            SafeArea(
-              child: Container(
-                child: InkWell(
-                    child: Text("Voir BDD"),
-                    onTap: (){
-                      StreamBuilder <QuerySnapshot> (
-                        stream: FirebaseFirestore.instance.collection("stand").snapshots(),
-                        builder: (context,AsyncSnapshot snapshot){
-                          if(snapshot.connectionState==ConnectionState.waiting) {
-                              return const Center(child : CircularProgressIndicator());
-                            }
-                          if(snapshot.hasData) {
-                              return GridView(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                              ));
-                            }
-                          return const Text("There is no Note");
-                        },
-                      );
-                     // _showModal(context);
-                    }),
-              ),
             )
           ],
         ),
@@ -70,45 +46,49 @@ class _HomeState extends State<Home> {
                   buttonColor: Colors.blue,
                   buttonText: 'Set Current Location',
                   onPicked: (pickedData) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Confirmation"),
-                          content: const Text("Confimez-vous la position choisie ?"),
-                          actions: [
-                            TextButton(
-                              child: const Text("Annuler"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            TextButton(
-                              child: const Text("Oui"),
-                              onPressed: () {
-                                FirebaseFirestore.instance
-                                    .collection('stand')
-                                    .add({'address':pickedData.address,"latitude":  pickedData.latLong.latitude,"longitude": pickedData.latLong.longitude});
-
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                setState(() {
-                                  locationaddress = '';
-                                  locationaddress += "Votre stand est désormais placé à l'adresse: ";
-                                  locationaddress += pickedData.address;
-
-                                });
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    ShowDialog(context,pickedData);
                   }),
-
             ),
           );
         });
+  }
+
+  void ShowDialog(BuildContext context,PickedData pickedData)
+  {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Confirmation"),
+          content: const Text("Confimez-vous la position choisie ?"),
+          actions: [
+            TextButton(
+              child: const Text("Annuler"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: const Text("Oui"),
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('stand')
+                    .add({'address':pickedData.address,"latitude":  pickedData.latLong.latitude,"longitude": pickedData.latLong.longitude});
+
+                Navigator.pop(context);
+                Navigator.pop(context);
+                setState(() {
+                  locationaddress = '';
+                  locationaddress += "Votre stand est désormais placé à l'adresse: ";
+                  locationaddress += pickedData.address;
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+
   }
  }
 
