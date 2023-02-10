@@ -31,12 +31,12 @@ class _BDDState extends State<BDD> {
         coordinates.add(l);
       }
       markers=coordinates 
-        .map((l) => Marker(
-        point: l,
+        .map((point) => Marker(
+        point: point,
         width: 60,
         height: 60,
         builder: (context) => Icon(
-          Icons.pin_drop,
+          Icons.location_pin,
           size: 60,
           color: Colors.blueAccent,
         ),
@@ -44,17 +44,26 @@ class _BDDState extends State<BDD> {
           .toList();
     });
   }
-
+  final PopupController _popupController = PopupController();
+  MapController mapController = MapController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:FlutterMap(
+      body: FlutterMap(
         options: MapOptions(
-                    center: LatLng(50.6371, 3.0530),
+          center: LatLng(50.6371, 3.0530),
+          zoom:17,
+
         ),
+        mapController: mapController,
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.app',
+          ),
+          MarkerLayer(markers: markers)
+        ],
 
-
-        
       ),
     );
   }
