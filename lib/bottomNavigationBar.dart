@@ -1,7 +1,8 @@
 import 'package:braderie_ppe/osmhome.dart';
 import 'package:flutter/material.dart';
-import 'profil.dart';
 import 'BDD.dart';
+import 'tuto_accueil.dart';
+import'profil.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _NavBarState extends State<NavBar> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = Home();
+        page = tuto_accueil();
         break;
       case 1:
         page = Home();
