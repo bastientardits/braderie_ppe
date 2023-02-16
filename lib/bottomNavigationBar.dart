@@ -1,5 +1,6 @@
 import 'package:braderie_ppe/osmhome.dart';
 import 'package:flutter/material.dart';
+import 'profil.dart';
 import 'BDD.dart';
 
 class NavBar extends StatefulWidget {
@@ -35,7 +36,7 @@ class _NavBarState extends State<NavBar> {
         page = BDD();
         break;
       case 4:
-        page = BDD();
+        page = Profil();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
