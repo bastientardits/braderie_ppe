@@ -5,6 +5,7 @@ import 'BDD.dart';
 import 'tuto_accueil.dart';
 import'profil.dart';
 import 'new_stand.dart';
+import 'accueil.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     Widget page;
-    Widget acceuil=tuto_accueil();
+    Widget acceuil=accueil();
     Widget home=Home();
     Widget Bdd=BDD();
     Widget formulaire=formulaireStand();

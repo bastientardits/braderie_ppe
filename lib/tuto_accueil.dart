@@ -1,56 +1,127 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:braderie_ppe/bottomNavigationBar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
 class tuto_accueil extends StatefulWidget {
   const tuto_accueil({Key? key}) : super(key: key);
+
   @override
-  State<tuto_accueil> createState() => _tuto_accueilState();
+  tuto_accueilState createState() => tuto_accueilState();
 }
 
-class _tuto_accueilState extends State<tuto_accueil> {
-  String text = '';
-  User? currentUser;
+class tuto_accueilState extends State<tuto_accueil> {
+  final introKey = GlobalKey<IntroductionScreenState>();
 
-  @override
-  void initState() {
-    super.initState();
-    currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      setState(() {
-        text = currentUser!.email!;
-      });
-    } else {
-      setState(() {
-        text = 'User is currently signed out!';
-      });
-    }
+  void _onIntroEnd(context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const NavBar()),
+    );
   }
 
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    setState(() {
-      text = 'You have been logged out.';
-    });
+  Widget _buildFullscreenImage() {
+    return Image.asset(
+      'fullscreen.jpg',
+      fit: BoxFit.cover,
+      height: double.infinity,
+      width: double.infinity,
+      alignment: Alignment.center,
+    );
+  }
+
+  Widget _buildImage(String assetName, [double width = 350]) {
+    return Image.asset(assetName, width: width);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Accueil'),
+    const bodyStyle = TextStyle(fontSize: 19.0);
+
+    const pageDecoration = PageDecoration(
+      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+      bodyTextStyle: bodyStyle,
+      bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      pageColor: Colors.white,
+      imagePadding: EdgeInsets.zero,
+    );
+
+    return IntroductionScreen(
+      key: introKey,
+      globalBackgroundColor: Colors.white,
+      allowImplicitScrolling: true,
+      autoScrollDuration: 30000,
+      globalFooter: SizedBox(
+        width: double.infinity,
+        height: 60,
+        child: ElevatedButton(
+          child: const Text(
+            'Je connais déjà l\'appli, allons-y!',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+          ),
+          onPressed: () => _onIntroEnd(context),
+        ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(text),
-            const SizedBox(height: 30),
-            if (currentUser != null)
-              ElevatedButton(
-                onPressed: _signOut,
-                child: const Text('Sign out'),
-              ),
-          ],
+      pages: [
+        PageViewModel(
+          title: "Un outil de recherche communautaire",
+          body:
+          "Optimisez vos recherches et vos ventes lors de braderies",
+          image: _buildImage('img1.jpg'),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Une carte mise à jour hebdomadairement",
+          body: "Identifiez les stands qui vous intéressent et laissez-nous vous y guider",
+          image: _buildFullscreenImage(),
+          decoration: pageDecoration.copyWith(
+            contentMargin: const EdgeInsets.symmetric(horizontal: 16),
+            fullScreen: true,
+            bodyFlex: 2,
+            imageFlex: 3,
+            safeArea: 100,
+          ),
+        ),
+        PageViewModel(
+          title: "La perle rare",
+          body: "Découvrez des articles rares que vous recherchez depuis des lustres",
+          image: _buildImage('img2.jpg'),
+          decoration: pageDecoration.copyWith(
+            bodyFlex: 6,
+            imageFlex: 6,
+            safeArea: 80,
+          ),
+        ),
+
+      ],
+      onDone: () => _onIntroEnd(context),
+      //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+      showSkipButton: false,
+      skipOrBackFlex: 0,
+      nextFlex: 0,
+      showBackButton: true,
+      //rtl: true, // Display as right-to-left
+      back: const Icon(Icons.arrow_back),
+      skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
+      next: const Icon(Icons.arrow_forward),
+      done: const Text('Suivant', style: TextStyle(fontWeight: FontWeight.w600)),
+      curve: Curves.fastLinearToSlowEaseIn,
+      controlsMargin: const EdgeInsets.all(16),
+      controlsPadding: kIsWeb
+          ? const EdgeInsets.all(12.0)
+          : const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+      dotsDecorator: const DotsDecorator(
+        size: Size(10.0, 10.0),
+        color: Color(0xFFBDBDBD),
+        activeSize: Size(22.0, 10.0),
+        activeShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+        ),
+      ),
+      dotsContainerDecorator: const ShapeDecoration(
+        color: Colors.black87,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
       ),
     );
