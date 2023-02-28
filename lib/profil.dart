@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -31,11 +32,40 @@ class _ProfilState extends State<Profil> {
         appBar: AppBar(
         title: Text('Profil'),
     ),
-    body :
-    Center(
+    body : Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        StreamBuilder(stream:FirebaseFirestore.instance
+        .collection('stand')
+        .where('userid', isEqualTo: currentUser?.uid)
+        .snapshots(),
+            builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
+          if(!snapshot.hasData){
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Container(
+            height: MediaQuery.of(context).size.height/2,
+            width: MediaQuery.of(context).size.width*3/4,
+            child: ListView(
+              children: snapshot.data!.docs.map((snap){
+                return Card(
+                  child : ListTile(
+                    leading :Icon(Icons.edit),
+                    title:Text(snap['address'].toString()),
+                    subtitle: Text(snap['longitude'].toString()),
+                    trailing: Icon(Icons.delete),
+                  )
+                );
+              }).toList()
+            )
+          );
+
+        }
+        ),
+
         Text(text),
         const SizedBox(height: 30),
         Visibility(
@@ -53,4 +83,25 @@ class _ProfilState extends State<Profil> {
     )
     );
   }
+}
+
+void retrieveSubCol()
+{
+  FirebaseFirestore.instance.collection("users").get().then((value){
+    value.docs.forEach((result) {
+      FirebaseFirestore.instance.collection("users")
+          .doc(result.id)
+          .collection("stand")
+          .get()
+          .then((subcol){
+            subcol.docs.forEach((element) {
+              print(element.data());
+            });
+      });
+    });
+  });
+}
+void retrieveDocUsingCondition()
+{
+
 }

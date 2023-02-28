@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -14,6 +15,7 @@ class BDD extends StatefulWidget {
 class _BDDState extends State<BDD> {
   List<DocumentSnapshot> documents = [];
   List<LatLng> coordinates = [];
+  List<bool> me = [];
   List<Marker> markers = [];
   @override
   void initState() {
@@ -27,22 +29,34 @@ class _BDDState extends State<BDD> {
       documents = snapshot.docs;
       for(var document in documents){
         LatLng l = LatLng(document['latitude'], document['longitude']);
+        if(FirebaseAuth.instance.currentUser?.uid==document['userid'])
+          {
+            me.add(true);
+          }
+        else
+          {
+            me.add(false);
+          }
         coordinates.add(l);
       }
-      markers=coordinates 
-        .map((point) => Marker(
+
+      markers=coordinates
+          .asMap() // Ajout de la méthode asMap() pour obtenir l'index
+          .map((index, point) => MapEntry(index, Marker(
         point: point,
         width: 60,
         height: 60,
         builder: (context) => Icon(
           Icons.location_pin,
           size: 60,
-          color: Colors.blueAccent,
+          color: me[index]==true?Colors.lightGreen:Colors.blueAccent,
         ),
-      ))
+      )))
+          .values
           .toList();
     });
   }
+
   final PopupController _popupController = PopupController();
   MapController mapController = MapController();
   @override
@@ -62,7 +76,7 @@ class _BDDState extends State<BDD> {
           ),
           MarkerLayer(markers: markers),
         ],
-        
+
 
       ),
     );
