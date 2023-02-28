@@ -30,29 +30,35 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     Widget page;
+    Widget acceuil=tuto_accueil();
+    Widget home=Home();
+    Widget Bdd=BDD();
+    Widget formulaire=formulaireStand();
+    Widget profil=Profil();
+    Widget login = LoginView(onLoginSuccess: (index) { // Passez la fonction de rappel ici
+      setState(() {
+        selectedIndex = index;
+      });
+    });
 
     switch (selectedIndex) {
       case 0:
-        page = tuto_accueil();
+        page = acceuil;
         break;
       case 1:
-        page = Home();
+        page = home;
         break;
       case 2:
-        page = BDD();
+        page = Bdd;
         break;
       case 3:
-        page = formulaireStand();
+        page = formulaire;
         break;
       case 4:
-        page = Profil();
+        page = profil;
         break;
       case 5:
-        page = LoginView(onLoginSuccess: (index) { // Passez la fonction de rappel ici
-          setState(() {
-            selectedIndex = index;
-          });
-        });
+        page = login;
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');

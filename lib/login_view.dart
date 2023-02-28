@@ -1,5 +1,3 @@
-import 'package:braderie_ppe/profil.dart';
-import 'home_view.dart';
 import 'package:flutter/foundation.dart';
 import 'signup_view.dart';
 import 'auth.dart';
@@ -89,7 +87,6 @@ class _SubmitButtonState extends State<_SubmitButton> {
   final AuthService _authService = FirebaseAuthService(
     authService: FirebaseAuth.instance,
   );
-
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -101,6 +98,9 @@ class _SubmitButtonState extends State<_SubmitButton> {
             email: email,
             password: password,
           );
+
+          //FirebaseAuth.instance.signOut();
+
           widget.onLoginSuccess(0);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(

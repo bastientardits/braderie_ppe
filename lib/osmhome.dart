@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'bottomNavigationBar.dart';
@@ -12,6 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String locationaddress='Pick Location';
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -26,7 +28,7 @@ class _HomeState extends State<Home> {
                       _showModal(context);
                     }),
               ),
-            )
+            ),
           ],
         ),
       );
@@ -73,8 +75,11 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 FirebaseFirestore.instance
                     .collection('stand')
-                    .add({'address':pickedData.address,"latitude":  pickedData.latLong.latitude,"longitude": pickedData.latLong.longitude});
-
+                    .add({
+                      'address':pickedData.address,"latitude":  pickedData.latLong.latitude,
+                      "longitude": pickedData.latLong.longitude,
+                      "userid": FirebaseAuth.instance.currentUser?.uid.toString()
+                    });
                 Navigator.pop(context);
                 Navigator.pop(context);
                 setState(() {
