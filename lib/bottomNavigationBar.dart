@@ -1,3 +1,4 @@
+import 'package:braderie_ppe/login_view.dart';
 import 'package:braderie_ppe/osmhome.dart';
 import 'package:flutter/material.dart';
 import 'BDD.dart';
@@ -7,14 +8,13 @@ import 'new_stand.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
-
   @override
   State<NavBar> createState() => _NavBarState();
+
 }
 
 class _NavBarState extends State<NavBar> {
   var selectedIndex = 0;
-
 
   void _onItemTapped(int index){
     setState(() {
@@ -40,6 +40,9 @@ class _NavBarState extends State<NavBar> {
       case 4:
         page = Profil();
         break;
+      case 5:
+        page=LoginView();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -52,6 +55,8 @@ class _NavBarState extends State<NavBar> {
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'), //changer en map
           BottomNavigationBarItem(icon: Icon(Icons.archive), label: 'Créer un stand'), // intégrer placer un stand a info vendeur
           BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Profil'),
+          BottomNavigationBarItem(icon: Icon(Icons.login_rounded), label: 'Connexion'),
+
         ],
         currentIndex: selectedIndex,
         selectedItemColor: Colors.amber,

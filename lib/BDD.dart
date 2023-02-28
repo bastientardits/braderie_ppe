@@ -7,7 +7,6 @@ import 'package:latlong2/latlong.dart';
 
 class BDD extends StatefulWidget {
   const BDD({Key? key}) : super(key: key);
-
   @override
   State<BDD> createState() => _BDDState();
 }
