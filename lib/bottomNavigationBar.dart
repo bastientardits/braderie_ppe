@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'BDD.dart';
 import 'tuto_accueil.dart';
 import'profil.dart';
+import 'new_stand.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -34,7 +35,7 @@ class _NavBarState extends State<NavBar> {
         page = BDD();
         break;
       case 3:
-        page = BDD();
+        page = formulaireStand();
         break;
       case 4:
         page = Profil();
@@ -49,7 +50,7 @@ class _NavBarState extends State<NavBar> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),//tooltip pour changer le label en haut
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Rechercher un objet'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'), //changer en map
-          BottomNavigationBarItem(icon: Icon(Icons.archive), label: 'Placer un stand'), // intégrer placer un stand a info vendeur
+          BottomNavigationBarItem(icon: Icon(Icons.archive), label: 'Créer un stand'), // intégrer placer un stand a info vendeur
           BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Profil'),
         ],
         currentIndex: selectedIndex,
