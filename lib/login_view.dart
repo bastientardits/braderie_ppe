@@ -1,4 +1,5 @@
 import 'package:braderie_ppe/profil.dart';
+import 'home_view.dart';
 import 'package:flutter/foundation.dart';
 import 'signup_view.dart';
 import 'auth.dart';
@@ -6,14 +7,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
+  final Function(int)? onLoginSuccess;
+  const LoginView({Key? key, this.onLoginSuccess}) : super(key: key);
   @override
-  _LoginViewState createState() => _LoginViewState();
-
+  _LoginViewState createState() => _LoginViewState(onLoginSuccess: onLoginSuccess);
 }
 
 class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final Function(int)? onLoginSuccess;
+  _LoginViewState({this.onLoginSuccess});
+
 
   @override
   void dispose() {
@@ -23,7 +29,6 @@ class _LoginViewState extends State<LoginView> {
   }
 @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
@@ -54,7 +59,8 @@ class _LoginViewState extends State<LoginView> {
             const SizedBox(height: 30.0),
              _SubmitButton(
                  emailController: _emailController,
-                 passwordController: _passwordController),
+                 passwordController: _passwordController,
+                 onLoginSuccess: (int result) => onLoginSuccess?.call(result)),
             const SizedBox(height: 30.0),
             _CreateAccountButton(),
           ],
@@ -66,11 +72,13 @@ class _LoginViewState extends State<LoginView> {
 class _SubmitButton extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final Function(int) onLoginSuccess; // Ajout de la fonction de rappel
 
   const _SubmitButton({
     Key? key,
     required this.emailController,
     required this.passwordController,
+    required this.onLoginSuccess, // Ajout de la fonction de rappel
   }) : super(key: key);
 
   @override
@@ -93,7 +101,7 @@ class _SubmitButtonState extends State<_SubmitButton> {
             email: email,
             password: password,
           );
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Profil()));
+          widget.onLoginSuccess(0);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

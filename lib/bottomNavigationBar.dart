@@ -21,9 +21,16 @@ class _NavBarState extends State<NavBar> {
       selectedIndex=index;
     });
   }
+  void onLoginSuccess(int selectedIndex) {
+    setState(() {
+      selectedIndex=0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget page;
+
     switch (selectedIndex) {
       case 0:
         page = tuto_accueil();
@@ -41,7 +48,11 @@ class _NavBarState extends State<NavBar> {
         page = Profil();
         break;
       case 5:
-        page=LoginView();
+        page = LoginView(onLoginSuccess: (index) { // Passez la fonction de rappel ici
+          setState(() {
+            selectedIndex = index;
+          });
+        });
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
