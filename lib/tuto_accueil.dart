@@ -22,7 +22,7 @@ class tuto_accueilState extends State<tuto_accueil> {
 
   Widget _buildFullscreenImage() {
     return Image.asset(
-      'fullscreen.jpg',
+      'assets/images/img2.jpg',
       fit: BoxFit.cover,
       height: double.infinity,
       width: double.infinity,
@@ -58,6 +58,10 @@ class tuto_accueilState extends State<tuto_accueil> {
           child: const Text(
             'Je connais déjà l\'appli, allons-y!',
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF885F06)
           ),
           onPressed: () => _onIntroEnd(context),
         ),
@@ -67,7 +71,7 @@ class tuto_accueilState extends State<tuto_accueil> {
           title: "Un outil de recherche communautaire",
           body:
           "Optimisez vos recherches et vos ventes lors de braderies",
-          image: _buildImage('img1.jpg'),
+          image: _buildImage('assets/images/img1.jpg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
@@ -85,7 +89,7 @@ class tuto_accueilState extends State<tuto_accueil> {
         PageViewModel(
           title: "La perle rare",
           body: "Découvrez des articles rares que vous recherchez depuis des lustres",
-          image: _buildImage('img2.jpg'),
+          image: _buildImage('assets/images/img3.jpg'),
           decoration: pageDecoration.copyWith(
             bodyFlex: 6,
             imageFlex: 6,
@@ -112,18 +116,26 @@ class tuto_accueilState extends State<tuto_accueil> {
           : const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
+        color: Color(0xFF885F06),
+        activeColor: Color(0xFFE19F0C),
         activeSize: Size(22.0, 10.0),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
       ),
       dotsContainerDecorator: const ShapeDecoration(
-        color: Colors.black87,
+        color: Colors.amber,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
       ),
+      baseBtnStyle: TextButton.styleFrom(
+        backgroundColor: Colors.amber,
+      ),
+      skipStyle: TextButton.styleFrom(foregroundColor: Color(0xFF885F06)),
+      doneStyle: TextButton.styleFrom(foregroundColor: Color(0xFF885F06)),
+      nextStyle: TextButton.styleFrom(foregroundColor: Color(0xFF885F06)),
+      backStyle: TextButton.styleFrom(foregroundColor: Color(0xFF885F06)),
     );
   }
 }

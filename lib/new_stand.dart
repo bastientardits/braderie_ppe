@@ -70,6 +70,7 @@ class _formulaireStandState extends State<formulaireStand> {
                     );
                   }).toList(),
                 ),
+              SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () {
                   showModalBottomSheet(
@@ -101,6 +102,9 @@ class _formulaireStandState extends State<formulaireStand> {
                     },
                   );
                 },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Color(0xFFE19F0C)),
+                ),//
                 child: Text('Ajouter des photos'),
               ),
               TextFormField(
@@ -159,7 +163,7 @@ class _formulaireStandState extends State<formulaireStand> {
                         }
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.lightBlueAccent),
+                        backgroundColor: MaterialStateProperty.all(Colors.amber),
                       ),
                       child: Text('Sauvegarder'),
                     ),
@@ -176,6 +180,10 @@ class _formulaireStandState extends State<formulaireStand> {
                           );
                         }
                       },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Color(0xFFE19F0C)),
+                      ),//
+
                       child: Text('Sauvegarder et placer'),
                     ),
                   ),

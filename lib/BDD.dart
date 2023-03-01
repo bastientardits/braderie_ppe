@@ -49,7 +49,7 @@ class _BDDState extends State<BDD> {
         builder: (context) => Icon(
           Icons.location_pin,
           size: 60,
-          color: me[index]==true?Colors.lightGreen:Colors.blueAccent,
+          color: me[index]==true?Color(0xFF885F06):Color(0xFFE19F0C),
         ),
       )))
           .values

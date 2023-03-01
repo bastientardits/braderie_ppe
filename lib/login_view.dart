@@ -31,6 +31,7 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
         title: const Text('Login'),
         centerTitle: true,
+        backgroundColor: Color(0xFFE19F0C),
       ),
       body: Center(
         child: Column(
@@ -110,6 +111,9 @@ class _SubmitButtonState extends State<_SubmitButton> {
           );
         }
       },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Color(0xFFE19F0C)),
+        ),
       child: const Text('Login'),
     );
   }
@@ -122,6 +126,10 @@ class _CreateAccountButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      style: ButtonStyle(foregroundColor: MaterialStateProperty.resolveWith<Color?>(
+    (Set<MaterialState> states) {
+        return Colors.amber;
+      } )),
       onPressed: () {
         Navigator.of(context).push(
           MaterialPageRoute(
