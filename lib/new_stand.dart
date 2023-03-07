@@ -19,6 +19,10 @@ class _formulaireStandState extends State<formulaireStand> {
   ];
   String? _selectedKeyword;
   List<File> _images = [];
+  String _description="";
+
+
+
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedImages = await ImagePicker().pickMultiImage();
@@ -33,6 +37,15 @@ class _formulaireStandState extends State<formulaireStand> {
     setState(() {
       _images.removeAt(index);
     });
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      String description = _description;
+      String keywords = _selectedKeyword ?? '';
+      print('Description: $description');
+      print('Keywords: $keywords');
+    }
   }
 
   @override
@@ -118,6 +131,11 @@ class _formulaireStandState extends State<formulaireStand> {
                     border: InputBorder.none,
                     hintText: 'Décrire votre stand en quelques mots'
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    _description = value;
+                  });
+                },
               ),
               SizedBox(height: 16.0),
               DropdownButton<String>(
@@ -155,11 +173,11 @@ class _formulaireStandState extends State<formulaireStand> {
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
-                          // If the form is valid, display a snackbar. In the real world,
-                          // you'd often call a server or save the information in a database.
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Sauvegarde du stand')),
-                          );
+                          // If the form is valid, display a snackbar.
+                          _submitForm();
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   const SnackBar(content: Text('Sauvegarde du stand')),
+                          // );
                         }
                       },
                       style: ButtonStyle(

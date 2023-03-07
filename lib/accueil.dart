@@ -11,13 +11,18 @@ class _accueilState extends State<accueil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/fullscreen.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 'Bienvenue sur notre application de brocante',
@@ -29,10 +34,8 @@ class _accueilState extends State<accueil> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
