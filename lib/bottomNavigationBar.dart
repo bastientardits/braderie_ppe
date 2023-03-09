@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'BDD.dart';
 import 'tuto_accueil.dart';
 import'profil.dart';
+import'profileWidget.dart';
 import 'new_stand.dart';
 import 'accueil.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,7 +50,8 @@ class _NavBarState extends State<NavBar> {
     Widget home=Home();
     Widget Bdd=BDD();
     Widget formulaire=formulaireStand();
-    Widget profil=Profil();
+    //Widget profil=Profil();
+    Widget profileWidget=ProfileWidget();
     Widget login = LoginView(onLoginSuccess: (index) { // Passez la fonction de rappel ici
       setState(() {
         selectedIndex = index;
@@ -70,7 +72,7 @@ class _NavBarState extends State<NavBar> {
         page = formulaire;
         break;
       case 4:
-        page = _isLoggedIn? profil : login;
+        page = _isLoggedIn? profileWidget : login;
         break;
       /*case 5:
         page = login;
