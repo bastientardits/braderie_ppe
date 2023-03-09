@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'BDD.dart';
 import 'tuto_accueil.dart';
 import'profil.dart';
+import 'search.dart';
 import'profileWidget.dart';
 import 'new_stand.dart';
 import 'accueil.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'popupMap.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -47,8 +49,9 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     Widget page;
     Widget acceuil=accueil();
-    Widget home=Home();
-    Widget Bdd=BDD();
+    //Widget home=Home(); //marker placer
+    Widget home=searchStand();
+    Widget Bdd=popupMap();
     Widget formulaire=formulaireStand();
     //Widget profil=Profil();
     Widget profileWidget=ProfileWidget();
