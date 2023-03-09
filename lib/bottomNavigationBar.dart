@@ -6,6 +6,7 @@ import 'tuto_accueil.dart';
 import'profil.dart';
 import 'new_stand.dart';
 import 'accueil.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -27,6 +28,19 @@ class _NavBarState extends State<NavBar> {
       selectedIndex=0;
     });
   }
+
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (mounted) {
+        setState(() {
+          _isLoggedIn = user != null;
+        });
+      }
+    });
+  }
+
+  bool _isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +70,11 @@ class _NavBarState extends State<NavBar> {
         page = formulaire;
         break;
       case 4:
-        page = profil;
+        page = _isLoggedIn? profil : login;
         break;
-      case 5:
+      /*case 5:
         page = login;
-        break;
+        break;*/
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -73,7 +87,7 @@ class _NavBarState extends State<NavBar> {
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'), //changer en map
           BottomNavigationBarItem(icon: Icon(Icons.archive), label: 'Créer un stand'), // intégrer placer un stand a info vendeur
           BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Profil'),
-          BottomNavigationBarItem(icon: Icon(Icons.login_rounded), label: 'Connexion'),
+          //BottomNavigationBarItem(icon: Icon(Icons.login_rounded), label: 'Connexion'),
 
         ],
         currentIndex: selectedIndex,
