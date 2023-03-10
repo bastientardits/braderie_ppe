@@ -35,6 +35,7 @@ class _formulaireStandState extends State<formulaireStand> {
   List<String> _pictures = [];
   String? _selectedKeyword;
   List<File> _images = [];
+  double zero= 0.1;
 
   String _description="";
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -220,8 +221,8 @@ class _formulaireStandState extends State<formulaireStand> {
                                 .collection('stand')
                                 .add({
                             'address': "",
-                              "latitude":  0.0,
-                            "longitude": 0.0,
+                              "latitude": zero,
+                            "longitude": zero,
                               "pictures": _pictures,
                             "userid": FirebaseAuth.instance.currentUser?.uid.toString(),
                               "description" : _description,
