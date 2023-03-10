@@ -115,7 +115,10 @@ class Popup extends StatelessWidget {
                 if (kDebugMode) {
                   print(snapshot.data.toString());
                 }
-                return Image.network(snapshot.data.toString());
+                if(snapshot.data!=null || snapshot.data=="")
+                    return Image.network(snapshot.data.toString(),height: 100,width: 100,);
+                else
+                   return Text("Photo pas possible");
               },
             ),
         ],
