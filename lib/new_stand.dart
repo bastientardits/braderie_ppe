@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path/path.dart';
+
+
 
 
 class formulaireStand extends StatefulWidget {
@@ -26,13 +32,12 @@ class _formulaireStandState extends State<formulaireStand> {
     'Jeux vidéos'
   ];
   List<String> _selectedKeywords = [];
+  List<String> _pictures = [];
   String? _selectedKeyword;
   List<File> _images = [];
+
   String _description="";
-
-
-
-
+  FirebaseStorage storage = FirebaseStorage.instance;
   Future<void> _pickImage(ImageSource source) async {
     final pickedImages = await ImagePicker().pickMultiImage();
     if (pickedImages != null) {
@@ -53,8 +58,23 @@ class _formulaireStandState extends State<formulaireStand> {
       String description = _description;
       String keywords = _selectedKeyword ?? '';
       List<String> keywordsList = _selectedKeywords ?? [];
+
       print('Description: $description');
       print('Keywords: ${keywordsList.join(', ')}');
+    }
+  }
+
+  Future uploadPic(BuildContext context) async{
+    for(File _image in _images) {
+      String fileName = basename(_image.path);
+      String res = FirebaseAuth.instance.currentUser!.uid.toString() + "/" + fileName;
+      _pictures.add(res);
+      Reference reference = storage.ref().child(res);
+      UploadTask uploadTask = reference.putFile(_image);
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+      setState(() {
+        print("picture uploaded");
+      });
     }
   }
 
@@ -195,11 +215,25 @@ class _formulaireStandState extends State<formulaireStand> {
                         if (_formKey.currentState!.validate()) {
                           // If the form is valid, display a snackbar.
                           _submitForm();
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   const SnackBar(content: Text('Sauvegarde du stand')),
-                          // );
-                        }
-                      },
+                          uploadPic(context);
+                            FirebaseFirestore.instance
+                                .collection('stand')
+                                .add({
+                            'address': "",
+                              "latitude":  0.0,
+                            "longitude": 0.0,
+                              "pictures": _pictures,
+                            "userid": FirebaseAuth.instance.currentUser?.uid.toString(),
+                              "description" : _description,
+                              "mot-cles" : _selectedKeywords,
+                            });
+                          _formKey.currentState!.reset();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Sauvegarde du stand')),
+                          );
+
+                      }
+                        },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.amber),
                       ),

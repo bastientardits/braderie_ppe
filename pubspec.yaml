@@ -39,7 +39,7 @@ dependencies:
   flutter_map: any
   flutter_map_marker_cluster: any
   image_picker: ^0.8.4+4
-
+  firebase_storage: ^11.0.15
 
 
   # The following adds the Cupertino Icons font to your application.

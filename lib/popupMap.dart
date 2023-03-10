@@ -103,8 +103,11 @@ class Popup extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(document['latitude'].toString()),
-          Text(document['longitude'].toString()),
+          Text(document['description'].toString()),
+          Text(document['mot-cles'].toString()),
+          Text(document['address'].toString()),
+
+
         ],
       ),
     );
