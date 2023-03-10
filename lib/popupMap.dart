@@ -100,26 +100,47 @@ class Popup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> pictures = document["pictures"];
     return Container(
-      height: 700,
+      height: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(document['description'].toString()),
           Text(document['mot-cles'].toString()),
           Text(document['address'].toString()),
-          for(String doc in document["pictures"])
-            FutureBuilder(
-              future: storage.ref().child("gs://braderieppe.appspot.com/"+doc).getDownloadURL(),
-              builder: (context, snapshot) {
-                if (kDebugMode) {
-                  print(snapshot.data.toString());
-                }
-                return Image.network(snapshot.data.toString());
+          SizedBox(
+            height: 100,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: pictures.length,
+              itemBuilder: (BuildContext context, int index) {
+                String doc = pictures[index];
+                return FutureBuilder(
+                  future: storage.ref().child(doc).getDownloadURL(),
+                  builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    if (kDebugMode) {
+                      print(snapshot.data.toString());
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.network(snapshot.data.toString(),
+                          height: 100, width: 100),
+                    );
+                  },
+                );
               },
             ),
+          ),
         ],
       ),
     );
   }
 }
+
+
+
+
