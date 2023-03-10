@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -111,16 +109,16 @@ class Popup extends StatelessWidget {
           Text(document['mot-cles'].toString()),
           Text(document['address'].toString()),
           for(String doc in document["pictures"])
-              FutureBuilder(
-                future: storage.ref().child("gs://braderieppe.appspot.com/"+doc).getDownloadURL(),
-                builder: (context, snapshot) {
-                  if (kDebugMode) {
-                    print(snapshot.data.toString());
-                  }
-                  return Image.network(snapshot.data.toString() );
-                },
-              ),
-    ],
+            FutureBuilder(
+              future: storage.ref().child("gs://braderieppe.appspot.com/"+doc).getDownloadURL(),
+              builder: (context, snapshot) {
+                if (kDebugMode) {
+                  print(snapshot.data.toString());
+                }
+                return Image.network(snapshot.data.toString());
+              },
+            ),
+        ],
       ),
     );
   }
