@@ -52,7 +52,7 @@ class _searchStandState extends State<searchStand> {
     if (_formKey.currentState!.validate()) {
       String description = _description;
       String keywords = _selectedKeyword ?? '';
-      List<String> keywordsList = _selectedKeywords ?? [];
+      List<String> keywordsList = _selectedKeywords;
       print('Description: $description');
       print('Keywords: ${keywordsList.join(', ')}');
     }
@@ -106,13 +106,13 @@ class _searchStandState extends State<searchStand> {
                   children: _keywords.map((String keyword) {
                     return ChoiceChip(
                       label: Text(keyword),
-                      selected: _selectedKeywords!.contains(keyword),
+                      selected: _selectedKeywords.contains(keyword),
                       onSelected: (bool selected) {
                         setState(() {
                           if (selected) {
-                            _selectedKeywords!.add(keyword);
+                            _selectedKeywords.add(keyword);
                           } else {
-                            _selectedKeywords!.remove(keyword);
+                            _selectedKeywords.remove(keyword);
                           }
                         });
                       },

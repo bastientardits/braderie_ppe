@@ -85,24 +85,3 @@ class _ProfilState extends State<Profil> {
     );
   }
 }
-
-void retrieveSubCol()
-{
-  FirebaseFirestore.instance.collection("users").get().then((value){
-    value.docs.forEach((result) {
-      FirebaseFirestore.instance.collection("users")
-          .doc(result.id)
-          .collection("stand")
-          .get()
-          .then((subcol){
-            subcol.docs.forEach((element) {
-              print(element.data());
-            });
-      });
-    });
-  });
-}
-void retrieveDocUsingCondition()
-{
-
-}

@@ -18,7 +18,7 @@ class formulaireStand extends StatefulWidget {
 
 class _formulaireStandState extends State<formulaireStand> {
   final _formKey = GlobalKey<FormState>();
-  List<String> _keywords = [
+  final List<String> _keywords = [
     'Vêtements',
     'Vêtements pour enfants',
     'Musique',
@@ -36,9 +36,10 @@ class _formulaireStandState extends State<formulaireStand> {
   String? _selectedKeyword;
   List<File> _images = [];
   double zero= 0.1;
-
+  String imageUrl="";
   String _description="";
   FirebaseStorage storage = FirebaseStorage.instance;
+
   Future<void> _pickImage(ImageSource source) async {
     final pickedImages = await ImagePicker().pickMultiImage();
     if (pickedImages != null) {
@@ -58,7 +59,7 @@ class _formulaireStandState extends State<formulaireStand> {
     if (_formKey.currentState!.validate()) {
       String description = _description;
       String keywords = _selectedKeyword ?? '';
-      List<String> keywordsList = _selectedKeywords ?? [];
+      List<String> keywordsList = _selectedKeywords;
 
       print('Description: $description');
       print('Keywords: ${keywordsList.join(', ')}');
@@ -68,11 +69,14 @@ class _formulaireStandState extends State<formulaireStand> {
   Future uploadPic(BuildContext context) async{
     for(File _image in _images) {
       String fileName = basename(_image.path);
+
       String res = FirebaseAuth.instance.currentUser!.uid.toString() + "/" + fileName;
       _pictures.add(res);
       Reference reference = storage.ref().child(res);
       UploadTask uploadTask = reference.putFile(_image);
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+      imageUrl = await reference.getDownloadURL();
+
       setState(() {
         print("picture uploaded");
       });
@@ -127,7 +131,7 @@ class _formulaireStandState extends State<formulaireStand> {
                             ListTile(
                               leading: Icon(Icons.camera_alt),
                               title: Text('Prendre une photo'),
-                              onTap: () {
+                              onTap: ()  {
                                 Navigator.pop(context);
                                 _pickImage(ImageSource.camera);
                               },
@@ -158,7 +162,7 @@ class _formulaireStandState extends State<formulaireStand> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Décrire votre stand en quelques mots'
                 ),
@@ -170,7 +174,7 @@ class _formulaireStandState extends State<formulaireStand> {
               ),
               SizedBox(height: 16.0),
               InputDecorator(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Mots-clés',
                 ),
@@ -180,13 +184,13 @@ class _formulaireStandState extends State<formulaireStand> {
                   children: _keywords.map((String keyword) {
                     return ChoiceChip(
                       label: Text(keyword),
-                      selected: _selectedKeywords!.contains(keyword),
+                      selected: _selectedKeywords.contains(keyword),
                       onSelected: (bool selected) {
                         setState(() {
                           if (selected) {
-                            _selectedKeywords!.add(keyword);
+                            _selectedKeywords.add(keyword);
                           } else {
-                            _selectedKeywords!.remove(keyword);
+                            _selectedKeywords.remove(keyword);
                           }
                         });
                       },

@@ -12,11 +12,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   String locationaddress='Pick Location';
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    if(FirebaseAuth.instance.currentUser != null)
+    {
+      return Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -32,6 +35,27 @@ class _HomeState extends State<Home> {
           ],
         ),
       );
+    }
+    else
+    {
+      return Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SafeArea(
+              child: Container(
+                child: InkWell(
+                    child: Text(locationaddress),
+                    onTap: (){
+                      _showModal2(context);
+                    }),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
   }
 
 
@@ -50,6 +74,21 @@ class _HomeState extends State<Home> {
                   onPicked: (pickedData) {
                     ShowDialog(context,pickedData);
                   }),
+            ),
+          );
+        });
+  }
+
+
+  void _showModal2(BuildContext context){
+    showModalBottomSheet(
+        context: context,
+        builder: (context){
+          return Container(
+            height: 600,
+            //color: Colors.red,
+            child: Center(
+                child: Text("Vous devez vous connecter pour placer un stand...")
             ),
           );
         });

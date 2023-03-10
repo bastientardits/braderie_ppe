@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
 
 class popupMap extends StatefulWidget {
   const popupMap({Key? key}) : super(key: key);
@@ -16,6 +19,7 @@ class _popupMapState extends State<popupMap> {
   List<LatLng> coordinates = [];
   List<bool> me = [];
   List<Marker> markers = [];
+
   @override
   void initState() {
     super.initState();
@@ -93,22 +97,30 @@ class _popupMapState extends State<popupMap> {
 
 class Popup extends StatelessWidget {
   final DocumentSnapshot document;
-
-  Popup({required this.document});
+  FirebaseStorage storage = FirebaseStorage.instance;
+  Popup({super.key, required this.document});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
+      height: 700,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(document['description'].toString()),
           Text(document['mot-cles'].toString()),
           Text(document['address'].toString()),
-          
-
-        ],
+          for(String doc in document["pictures"])
+              FutureBuilder(
+                future: storage.ref().child("gs://braderieppe.appspot.com/"+doc).getDownloadURL(),
+                builder: (context, snapshot) {
+                  if (kDebugMode) {
+                    print(snapshot.data.toString());
+                  }
+                  return Image.network(snapshot.data.toString() );
+                },
+              ),
+    ],
       ),
     );
   }
