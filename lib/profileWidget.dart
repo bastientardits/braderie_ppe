@@ -6,7 +6,7 @@ class ProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -15,7 +15,7 @@ class ProfileWidget extends StatelessWidget {
             margin: EdgeInsets.only(top: 50),
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/profile_image.png'),
+              backgroundImage: AssetImage('assets/images/profil.jpg'),
             ),
           ),
           SizedBox(height: 30),
@@ -38,7 +38,7 @@ class ProfileWidget extends StatelessWidget {
           onPressed: () {},
           child: Text(title),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.orange, backgroundColor: Colors.white,
+            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
           ),
         ),
       ),
@@ -54,7 +54,7 @@ class ProfileWidget extends StatelessWidget {
           onPressed: () {},
           child: Text(title),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.orange, backgroundColor: Colors.white,
+            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
           ),
         ),
       ),
@@ -70,7 +70,7 @@ class ProfileWidget extends StatelessWidget {
           onPressed: () {},
           child: Text(title),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.orange, backgroundColor: Colors.white,
+            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
           ),
         ),
       ),
@@ -89,7 +89,7 @@ class ProfileWidget extends StatelessWidget {
           );},
           child: Text(title),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.orange, backgroundColor: Colors.white,
+            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
           ),
         ),
       ),
@@ -107,7 +107,7 @@ class ProfileWidget extends StatelessWidget {
             },
           child: Text(title),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.orange, backgroundColor: Colors.white,
+            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
           ),
         ),
       ),
