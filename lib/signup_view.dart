@@ -23,8 +23,9 @@ import 'package:flutter/material.dart';
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Account'),
+        title: const Text('Créer un compte'),
         centerTitle: true,
+        backgroundColor: Color(0xFFE19F0C),
       ),
       body: Center(
         child: Column(
@@ -98,7 +99,10 @@ class _SubmitButtonState extends State<_SubmitButton> {
           );
         }
       },
-      child: const Text('Create Account'),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Color(0xFFE19F0C)),
+      ),
+      child: const Text('Créer mon compte'),
     );
   }
 }

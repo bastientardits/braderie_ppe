@@ -25,7 +25,7 @@ class _accueilState extends State<accueil> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Bienvenue sur notre application de brocante',
+                'Bienvenue sur notre application de Street Art',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24,
