@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class searchStand extends StatefulWidget {
@@ -12,7 +15,7 @@ class searchStand extends StatefulWidget {
 
 class _searchStandState extends State<searchStand> {
   final _formKey = GlobalKey<FormState>();
-  List<String> _keywords = [
+  final List<String> _keywords = [
     'Vêtements',
     'Vêtements pour enfants',
     'Musique',
@@ -28,16 +31,14 @@ class _searchStandState extends State<searchStand> {
   List<String> _selectedKeywords = [];
   String? _selectedKeyword;
   List<File> _images = [];
-  String _description="";
-
-
-
+  String _description = "";
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedImages = await ImagePicker().pickMultiImage();
     if (pickedImages != null) {
       setState(() {
-        _images.addAll(pickedImages.map((pickedImage) => File(pickedImage.path)).toList());
+        _images.addAll(
+            pickedImages.map((pickedImage) => File(pickedImage.path)).toList());
       });
     }
   }
@@ -53,8 +54,6 @@ class _searchStandState extends State<searchStand> {
       String description = _description;
       String keywords = _selectedKeyword ?? '';
       List<String> keywordsList = _selectedKeywords;
-      print('Description: $description');
-      print('Keywords: ${keywordsList.join(', ')}');
     }
   }
 
@@ -131,24 +130,93 @@ class _searchStandState extends State<searchStand> {
                         _formKey.currentState!.reset();
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.red),),
+                        backgroundColor: MaterialStateProperty.all(Colors.red),
+                      ),
                       child: Text('Annuler'),
                     ),
                   ),
                   Flexible(
                     child: ElevatedButton(
                       onPressed: () {
-                        // Validate returns true if the form is valid, or false otherwise.
-                        if (_formKey.currentState!.validate()) {
-                          // display map with filter
-                            print("map with filter");
-                        }
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              appBar: AppBar(
+                                title: Text('Profil'),
+                                backgroundColor: Color(0xFFE19F0C),
+                              ),
+                              body: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    StreamBuilder(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('stand')
+                                          .where('mot-cles',arrayContainsAny:_selectedKeywords )
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                        return Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                2,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                3 /
+                                                4,
+                                            child: ListView(
+                                                children: snapshot.data!.docs
+                                                    .map((snap) {
+                                              return Card(
+                                                  child: ListTile(
+                                                title: Text(
+                                                    snap['address'].toString()),
+                                                subtitle: Text(snap['description']
+                                                    .toString()+" "+snap['mot-cles']
+                                                    .toString()
+                                                ),
+                                                    trailing: InkWell(
+                                                      child: Icon(Icons.gps_fixed_outlined),
+                                                      onTap: () {
+                                                        String latlong = "${snap['latitude']},${snap['longitude']}";
+                                                        String url = "https://maps.google.com/?q=${snap['latitude']},${snap['longitude']}";
+                                                        final Uri _url = Uri.parse(url);
+                                                        launchUrl(_url);
+                                                      },
+                                                    ),
+                                              ));
+                                            }).toList()));
+                                      },
+                                    ),
+                                    const SizedBox(height: 30),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Retour"),
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.all(const Color(0xFFE19F0C)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
                       },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Color(0xFFE19F0C)),
-                      ),//
-
-                      child: Text('Rechercher'),
+                      child: const Text("Rechercher"),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFFE19F0C)),
+                        ),
                     ),
                   ),
                 ],
@@ -160,6 +228,3 @@ class _searchStandState extends State<searchStand> {
     );
   }
 }
-
-
-
