@@ -70,7 +70,7 @@ class _formulaireStandState extends State<formulaireStand> {
     for(File _image in _images) {
       String fileName = basename(_image.path);
 
-      String res = FirebaseAuth.instance.currentUser!.uid.toString() + "/" + fileName;
+      String res = "${FirebaseAuth.instance.currentUser!.uid}/$fileName";
       _pictures.add(res);
       Reference reference = storage.ref().child(res);
       UploadTask uploadTask = reference.putFile(_image);
