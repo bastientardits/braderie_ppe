@@ -17,6 +17,21 @@ class _popupMapState extends State<popupMap> {
   List<LatLng> coordinates = [];
   List<bool> me = [];
   List<Marker> markers = [];
+   List<String> _selectedKeywords = [];
+  final List<String> _keywords = [
+    'Vêtements',
+    'Vêtements pour enfants',
+    'Musique',
+    'Jeux vidéos',
+    'Antiquités',
+    'Cinéma',
+    'Livres',
+    'Manga',
+    'Objets de collection',
+    'Jeux',
+    'Art',
+    'Autre'
+  ];
 
   @override
   void initState() {
@@ -68,28 +83,136 @@ class _popupMapState extends State<popupMap> {
     });
   }
 
+  void _filterMarkers() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('spot').get();
+
+    setState(()  {
+      // Filter documents based on keyword search
+      documents = snapshot.docs.where((doc) => (doc['mot-cles'] as List<dynamic>).any((keyword) => _selectedKeywords.contains(keyword))).toList();
+      coordinates = documents.map((doc) => LatLng(doc['latitude'], doc['longitude'])).toList();
+      me = documents.map((doc) => FirebaseAuth.instance.currentUser?.uid == doc['userid']).toList();
+
+      // Update markers based on filtered documents
+      markers = coordinates
+          .asMap()
+          .map((index, point) => MapEntry(index, Marker(
+        point: point,
+        width: 60,
+        height: 60,
+        builder: (context) => GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => Popup(
+                document: documents[index],
+              ),
+            );
+          },
+          child: Icon(
+            Icons.location_pin,
+            size: 60,
+            color: me[index] == true ? const Color(0xFF63AEEE) : const Color(
+                0xFF807E7A),
+          ),
+        ),
+      )))
+          .values
+          .toList();
+    });
+  }
+
   MapController mapController = MapController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(50.6371, 3.0530),
-          zoom:17,
-
-        ),
-        mapController: mapController,
+      appBar: AppBar(
+        title: const Text('Rechercher un stand par thème'),
+        backgroundColor: const Color(0xFFE19F0C),
+        automaticallyImplyLeading: false,
+      ),
+      body: Column(
         children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InputDecorator(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Mots-clés',
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _keywords.map((String keyword) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: ChoiceChip(
+                        label: Text(keyword),
+                        selected: _selectedKeywords.contains(keyword),
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (selected) {
+                              _selectedKeywords.add(keyword);
+                            } else {
+                              _selectedKeywords.remove(keyword);
+                            }
+                          });
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
           ),
-          MarkerLayer(markers: markers),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedKeywords=[];
+                    loadDocuments();
+                  });
+                },
+                child: Text('Annuler la recherche'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Color(0xFFB71118)),
+                ),
+              ),
+              SizedBox(width: 10.0),
+              ElevatedButton(
+                onPressed: () {
+                  if(_selectedKeywords.isNotEmpty) {
+                    _filterMarkers();
+                  }
+                },
+                child: Text('Rechercher'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Color(0xFF2487DC)),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: FlutterMap(
+              options: MapOptions(
+                center: LatLng(50.640930,3.044581),
+                zoom:14,
+              ),
+              mapController: mapController,
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                MarkerLayer(markers: markers),
+              ],
+            ),
+          ),
         ],
-
-
       ),
     );
+
   }
 }
 

@@ -195,10 +195,10 @@ class _searchStandState extends State<searchStand> {
                             ),
                           );
                         },
-                        child: const Text("Rechercher"),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(const Color(0xFFE19F0C)),
                           ),
+                        child: const Text("Rechercher"),
                       ),
                     ),
                   ],
