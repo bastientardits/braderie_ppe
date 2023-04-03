@@ -42,7 +42,7 @@ class _popupMapState extends State<popupMap> {
       }
 
       markers=coordinates
-          .asMap() // Ajout de la méthode asMap() pour obtenir l'index
+          .asMap()
           .map((index, point) => MapEntry(index, Marker(
         point: point,
         width: 60,
@@ -59,7 +59,7 @@ class _popupMapState extends State<popupMap> {
           child: Icon(
             Icons.location_pin,
             size: 60,
-            color: me[index]==true?Color(0xFF885F06):Color(0xFFE19F0C),
+            color: me[index]==true?const Color(0xFF885F06):const Color(0xFFE19F0C),
           ),
         ),
       )))
@@ -120,7 +120,7 @@ class Popup extends StatelessWidget {
                   future: storage.ref().child(doc).getDownloadURL(),
                   builder: (context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
                     if (kDebugMode) {
                       print(snapshot.data.toString());

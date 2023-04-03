@@ -14,14 +14,14 @@ class _accueilState extends State<accueil> {
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/fullscreen.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          Center(
+          const Center(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(

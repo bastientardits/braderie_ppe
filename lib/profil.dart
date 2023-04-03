@@ -30,8 +30,8 @@ class _ProfilState extends State<Profil> {
 
     return Scaffold(
         appBar: AppBar(
-        title: Text('Profil'),
-          backgroundColor:  Color(0xFFE19F0C),
+        title: const Text('Profil'),
+          backgroundColor:  const Color(0xFFE19F0C),
     ),
     body : Center(
     child: Column(
@@ -43,21 +43,21 @@ class _ProfilState extends State<Profil> {
         .snapshots(),
             builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
           if(!snapshot.hasData){
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
-          return Container(
+          return SizedBox(
             height: MediaQuery.of(context).size.height/2,
             width: MediaQuery.of(context).size.width*3/4,
             child: ListView(
               children: snapshot.data!.docs.map((snap){
                 return Card(
                   child : ListTile(
-                    leading :Icon(Icons.edit),
+                    leading : const Icon(Icons.edit),
                     title:Text(snap['address'].toString()),
                     subtitle: Text(snap['longitude'].toString()),
-                    trailing: Icon(Icons.delete),
+                    trailing:  const Icon(Icons.delete),
                   )
                 );
               }).toList()

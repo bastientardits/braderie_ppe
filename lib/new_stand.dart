@@ -60,9 +60,6 @@ class _formulaireStandState extends State<formulaireStand> {
       String description = _description;
       String keywords = _selectedKeyword ?? '';
       List<String> keywordsList = _selectedKeywords;
-
-      print('Description: $description');
-      print('Keywords: ${keywordsList.join(', ')}');
     }
   }
 
