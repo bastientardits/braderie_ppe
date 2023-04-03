@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart';
-
+import 'package:multi_image_picker2/multi_image_picker2.dart';
 
 
 
@@ -221,11 +221,11 @@ class _formulaireStandState extends State<formulaireStand> {
                             FirebaseFirestore.instance
                                 .collection('stand')
                                 .add({
-                            'address': "",
+                              'address': "",
                               "latitude": zero,
-                            "longitude": zero,
+                              "longitude": zero,
                               "pictures": _pictures,
-                            "userid": FirebaseAuth.instance.currentUser?.uid.toString(),
+                              "userid": FirebaseAuth.instance.currentUser?.uid.toString(),
                               "description" : _description,
                               "mot-cles" : _selectedKeywords,
                             });

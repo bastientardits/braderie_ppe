@@ -1,9 +1,5 @@
 import 'package:braderie_ppe/login_view.dart';
-import 'package:braderie_ppe/osmhome.dart';
 import 'package:flutter/material.dart';
-import 'BDD.dart';
-import 'tuto_accueil.dart';
-import'profil.dart';
 import 'search.dart';
 import'profileWidget.dart';
 import 'new_stand.dart';
@@ -51,7 +47,7 @@ class _NavBarState extends State<NavBar> {
     Widget acceuil=accueil();
     //Widget home=Home(); //marker placer
     Widget home=searchStand();
-    Widget Bdd=popupMap();
+    Widget Bdd=PopupMap();
     Widget formulaire=formulaireStand();
     //Widget profil=Profil();
     Widget profileWidget=ProfileWidget();
