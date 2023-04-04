@@ -286,6 +286,11 @@ class _formulaireStandState extends State<formulaireStand> {
                           );
 
                         }
+                        if(_isLoggedIn==false){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Il faut se connecter pour placer un stand')),
+                        );}
+
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(const Color(0xFFE19F0C)),
