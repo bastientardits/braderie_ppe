@@ -73,9 +73,6 @@ class _NavBarState extends State<NavBar> {
       case 4:
         page = _isLoggedIn? profileWidget : login;
         break;
-      /*case 5:
-        page = login;
-        break;*/
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -83,12 +80,11 @@ class _NavBarState extends State<NavBar> {
       body:page,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),//tooltip pour changer le label en haut
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Accueil'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Rechercher un objet'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'), //changer en map
-          BottomNavigationBarItem(icon: Icon(Icons.archive), label: 'Créer un stand'), // intégrer placer un stand a info vendeur
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Carte interactive'),
+          BottomNavigationBarItem(icon: Icon(Icons.archive), label: 'Créer un stand'),
           BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Profil'),
-          //BottomNavigationBarItem(icon: Icon(Icons.login_rounded), label: 'Connexion'),
 
         ],
         currentIndex: selectedIndex,
