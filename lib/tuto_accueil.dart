@@ -20,9 +20,9 @@ class tuto_accueilState extends State<tuto_accueil> {
     );
   }
 
-  Widget _buildFullscreenImage() {
+  Widget _buildFullscreenImage(String assetName) {
     return Image.asset(
-      'assets/images/img2.jpg',
+      assetName,
       fit: BoxFit.cover,
       height: double.infinity,
       width: double.infinity,
@@ -53,7 +53,7 @@ class tuto_accueilState extends State<tuto_accueil> {
       autoScrollDuration: 30000,
       globalFooter: SizedBox(
         width: double.infinity,
-        height: 60,
+        height: 50,
         child: ElevatedButton(
           child: const Text(
             'Je connais déjà l\'appli, allons-y!',
@@ -71,13 +71,19 @@ class tuto_accueilState extends State<tuto_accueil> {
           title: "Un outil de recherche communautaire",
           body:
           "Optimisez vos recherches et vos ventes lors de braderies",
-          image: _buildImage('assets/images/img1.jpg'),
-          decoration: pageDecoration,
+          image: _buildFullscreenImage('assets/images/img1.jpg'),
+          decoration: pageDecoration.copyWith(
+            contentMargin: const EdgeInsets.symmetric(horizontal: 16),
+            fullScreen: true,
+            bodyFlex: 2,
+            imageFlex: 3,
+            safeArea: 100,
+          ),
         ),
         PageViewModel(
           title: "Une carte mise à jour hebdomadairement",
           body: "Identifiez les stands qui vous intéressent et laissez-nous vous y guider",
-          image: _buildFullscreenImage(),
+          image: _buildFullscreenImage('assets/images/img2.jpg'),
           decoration: pageDecoration.copyWith(
             contentMargin: const EdgeInsets.symmetric(horizontal: 16),
             fullScreen: true,
@@ -89,11 +95,13 @@ class tuto_accueilState extends State<tuto_accueil> {
         PageViewModel(
           title: "La perle rare",
           body: "Découvrez des articles rares que vous recherchez depuis des lustres",
-          image: _buildImage('assets/images/img3.jpg'),
+          image: _buildFullscreenImage('assets/images/img3.jpg'),
           decoration: pageDecoration.copyWith(
-            bodyFlex: 6,
-            imageFlex: 6,
-            safeArea: 80,
+            contentMargin: const EdgeInsets.symmetric(horizontal: 16),
+            fullScreen: true,
+            bodyFlex: 2,
+            imageFlex: 3,
+            safeArea: 100,
           ),
         ),
 

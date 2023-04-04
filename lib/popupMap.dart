@@ -125,11 +125,6 @@ class _PopupMapState extends State<PopupMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rechercher un stand par thème'),
-        backgroundColor: const Color(0xFFE19F0C),
-        automaticallyImplyLeading: false,
-      ),
       body: Column(
         children: [
           Padding(

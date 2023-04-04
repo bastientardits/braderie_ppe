@@ -81,7 +81,7 @@ class _NavBarState extends State<NavBar> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Accueil'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Rechercher un objet'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Rechercher'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Carte interactive'),
           BottomNavigationBarItem(icon: Icon(Icons.archive), label: 'Créer un stand'),
           BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Profil'),
