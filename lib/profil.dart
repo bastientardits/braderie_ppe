@@ -1,6 +1,5 @@
 import 'dart:io' ;
 import 'osmhome.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +27,7 @@ class _ProfilState extends State<Profil> {
   List<File> _images = [];
 
 
-  void _addImage(String id) async {
+  Future _addImage(String id) async {
     String imageUrl = "";
 
     final pickedImages = await ImagePicker().pickMultiImage();
@@ -39,20 +38,15 @@ class _ProfilState extends State<Profil> {
       for (File _image in _images) {
         String fileName = basename(_image.path);
         String res = "${FirebaseAuth.instance.currentUser!.uid}/$fileName";
-        print("------------------------------------------------------");
-        print(res);
-        print("------------------------------------------------------");
         pictures.add(res);
-
         Reference reference = FirebaseStorage.instance.ref().child(res);
+
         UploadTask uploadTask = reference.putFile(_image);
         TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
         imageUrl = await reference.getDownloadURL();
-
-        setState(() {
-          // print("picture uploaded");
-        });
       }
+      print("pictures");
+      print(pictures);
       FirebaseFirestore.instance.collection('stand').doc(id).update(
           {"pictures": pictures});
     }
