@@ -126,7 +126,7 @@ class _PopupMapState extends State<PopupMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filtrer les stands par thème'),
+        title: const Text('Rechercher un stand par thème'),
         backgroundColor: const Color(0xFFE19F0C),
         automaticallyImplyLeading: false,
       ),
@@ -215,42 +215,23 @@ class _PopupMapState extends State<PopupMap> {
 
   }
 }
-class Popup extends StatefulWidget {
+
+class Popup extends StatelessWidget {
   final DocumentSnapshot document;
   FirebaseStorage storage = FirebaseStorage.instance;
   Popup({super.key, required this.document});
 
   @override
-  _PopupState createState() => _PopupState();
-}
-
-class _PopupState extends State<Popup> {
-  List<dynamic> pictures = [];
-
-  @override
-  void initState() {
-    super.initState();
-    pictures = widget.document["pictures"];
-  }
-
-  Future<void> deleteImage(int index) async {
-    String doc = pictures[index];
-    await widget.storage.ref().child(doc).delete();
-    pictures.removeAt(index);
-    widget.document.reference.update({"pictures": pictures});
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
+    List<dynamic> pictures = document["pictures"];
     return Container(
       height: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(widget.document['description'].toString()),
-          Text(widget.document['mot-cles'].toString()),
-          Text(widget.document['address'].toString()),
+          Text(document['description'].toString()),
+          Text(document['mot-cles'].toString()),
+          Text(document['address'].toString()),
           SizedBox(
             height: 100,
             child: ListView.builder(
@@ -259,7 +240,7 @@ class _PopupState extends State<Popup> {
               itemBuilder: (BuildContext context, int index) {
                 String doc = pictures[index];
                 return FutureBuilder(
-                  future: widget.storage.ref().child(doc).getDownloadURL(),
+                  future: storage.ref().child(doc).getDownloadURL(),
                   builder: (context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
@@ -269,20 +250,8 @@ class _PopupState extends State<Popup> {
                     }
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        children: [
-                          Image.network(snapshot.data.toString(),
-                              height: 100, width: 100),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () => deleteImage(index),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: Image.network(snapshot.data.toString(),
+                          height: 100, width: 100),
                     );
                   },
                 );
@@ -294,3 +263,7 @@ class _PopupState extends State<Popup> {
     );
   }
 }
+
+
+
+

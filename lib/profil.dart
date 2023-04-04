@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +13,6 @@ class Profil extends StatefulWidget {
 
 class _ProfilState extends State<Profil> {
   List<dynamic> pictures = [];
-
   late String? _description;
   bool _isLoggedIn = false;
   double pickedLongitude = 0.1;
@@ -26,14 +23,16 @@ class _ProfilState extends State<Profil> {
     String doc = pictures[index];
     try {
       await FirebaseStorage.instance.ref().child(doc).delete();
+      // Remove the deleted image from the UI
+      setState(() {
+        pictures.removeAt(index);
+      });
     } catch (e) {
       print("Error deleting image: $e");
     }
-    pictures.removeAt(index);
-    print(pictures);
     FirebaseFirestore.instance.collection('stand').doc(id).update({"pictures": pictures});
-    setState(() {});
   }
+
 
 
   void _showEditForm(BuildContext context, String id) async {
@@ -62,8 +61,9 @@ class _ProfilState extends State<Profil> {
     String defaultDescription = data?['description'] ?? 'Default Description';
     _selectedKeywords = List<String>.from(data?['mot-cles']);
     _description = data?['description'];
-    pictures = data?['pictures'];
-
+    setState(() {
+      pictures= data?['pictures'];
+    });
 
     await showDialog(
       context: context,
@@ -136,43 +136,39 @@ class _ProfilState extends State<Profil> {
               SizedBox(
                 height: 100,
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: Axis.vertical,
                   child: Row(
-                    children: pictures
-                        .map(
-                          (doc) => FutureBuilder(
-                        future: widget.storage
-                            .ref()
-                            .child(doc)
-                            .getDownloadURL(),
-                        builder:
-                            (context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          }
-                          int index = pictures.indexOf(doc); // Récupère l'index de l'élément dans pictures
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(
-                              children: [
-                                Image.network(snapshot.data.toString(),
-                                    height: 100, width: 100),
-                                Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  child: IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () => deleteImage(index,id),
+                    children: pictures.map((doc) =>
+                        FutureBuilder(future: widget.storage.ref().child(doc).getDownloadURL(),
+                          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+                            int index = pictures.indexOf(doc); // Récupère l'index de l'élément dans pictures
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Stack(
+                                children: [
+                                  Image.network(snapshot.data.toString(),
+                                      height: 100, width: 100),
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    child: IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () => deleteImage(index, id).then((_) {
+                                        setState(() {
+                                          pictures.removeAt(index);
+                                        });
+                                      }),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                        .toList(),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                    ).toList(),
                   ),
                 ),
               ),
@@ -284,6 +280,7 @@ class _ProfilState extends State<Profil> {
   @override
   void initState() {
     super.initState();
+    pictures =[];
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (mounted) {
         setState(() {
