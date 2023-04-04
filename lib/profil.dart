@@ -1,29 +1,44 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
-
-
 class Profil extends StatefulWidget {
-  const Profil({Key? key}) : super(key: key);
+  FirebaseStorage storage = FirebaseStorage.instance;
+  Profil({Key? key}) : super(key: key);
   @override
   State<Profil> createState() => _ProfilState();
 }
 
 class _ProfilState extends State<Profil> {
+  List<dynamic> pictures = [];
 
   late String? _description;
   bool _isLoggedIn = false;
-  double pickedLongitude=0.1;
-  double pickedLatitude=0.1;
+  double pickedLongitude = 0.1;
+  double pickedLatitude = 0.1;
   late DocumentSnapshot document;
-  FirebaseStorage storage = FirebaseStorage.instance;
+
+  Future<void> deleteImage(int index,String id) async {
+    String doc = pictures[index];
+    try {
+      await FirebaseStorage.instance.ref().child(doc).delete();
+    } catch (e) {
+      print("Error deleting image: $e");
+    }
+    pictures.removeAt(index);
+    print(pictures);
+    FirebaseFirestore.instance.collection('stand').doc(id).update({"pictures": pictures});
+    setState(() {});
+  }
+
 
   void _showEditForm(BuildContext context, String id) async {
     String? description;
-    String locationaddress='Replacer le stand';
+    String locationaddress = 'Replacer le stand';
     final List<String> _keywords = [
       'Vêtements',
       'Vêtements pour enfants',
@@ -38,14 +53,17 @@ class _ProfilState extends State<Profil> {
       'Art',
       'Autre'
     ];
-     List<String> _selectedKeywords = [];
+    List<String> _selectedKeywords = [];
 
     // retrieve the document from Firebase
+
     DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('stand').doc(id).get();
     Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
     String defaultDescription = data?['description'] ?? 'Default Description';
-    _selectedKeywords=List<String>.from(data?['mot-cles']);
+    _selectedKeywords = List<String>.from(data?['mot-cles']);
     _description = data?['description'];
+    pictures = data?['pictures'];
+
 
     await showDialog(
       context: context,
@@ -87,9 +105,9 @@ class _ProfilState extends State<Profil> {
                 ),
                 initialValue: _description,
                 onChanged: (String value) {
-                        setState(() {
-                                  description = value;
-                        });
+                  setState(() {
+                    description = value;
+                  });
                 },
                 maxLines: 5,
                 validator: (String? value) {
@@ -107,7 +125,7 @@ class _ProfilState extends State<Profil> {
                       child: Container(
                         child: ElevatedButton(
                             child: Text(locationaddress),
-                            onPressed: (){
+                            onPressed: () {
                               _showModal(context);
                             }),
                       ),
@@ -115,9 +133,51 @@ class _ProfilState extends State<Profil> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 100,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: pictures
+                        .map(
+                          (doc) => FutureBuilder(
+                        future: widget.storage
+                            .ref()
+                            .child(doc)
+                            .getDownloadURL(),
+                        builder:
+                            (context, AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+                          int index = pictures.indexOf(doc); // Récupère l'index de l'élément dans pictures
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Stack(
+                              children: [
+                                Image.network(snapshot.data.toString(),
+                                    height: 100, width: 100),
+                                Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  child: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () => deleteImage(index,id),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                        .toList(),
+                  ),
+                ),
+              ),
             ],
           ),
-
           actions: [
             ElevatedButton(
               onPressed: () {
@@ -130,20 +190,24 @@ class _ProfilState extends State<Profil> {
                 //edit the stand
                 description ??= data?['description'];
 
-                if (pickedLongitude==0.1) {
-                  FirebaseFirestore.instance.collection('stand').doc(id).update(
-                      {
-                        'description': description,
-                        'mot-cles': _selectedKeywords
-                      });
+                if (pickedLongitude == 0.1) {
+                  FirebaseFirestore.instance
+                      .collection('stand')
+                      .doc(id)
+                      .update({
+                    'description': description,
+                    'mot-cles': _selectedKeywords
+                  });
                 } else {
-                  FirebaseFirestore.instance.collection('stand').doc(id).update(
-                      {
-                        'description': description,
-                        'mot-cles': _selectedKeywords,
-                        'longitude': pickedLongitude,
-                        'latitude' : pickedLatitude
-                      });
+                  FirebaseFirestore.instance
+                      .collection('stand')
+                      .doc(id)
+                      .update({
+                    'description': description,
+                    'mot-cles': _selectedKeywords,
+                    'longitude': pickedLongitude,
+                    'latitude': pickedLatitude
+                  });
                 }
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -151,8 +215,8 @@ class _ProfilState extends State<Profil> {
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(const Color(
-                    0xFFB71118)),
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFFB71118)),
               ),
               child: const Text('Sauvegarder les modifications'),
             ),
@@ -161,33 +225,35 @@ class _ProfilState extends State<Profil> {
       },
     );
   }
-  void _showModal(BuildContext context){
+
+  void _showModal(BuildContext context) {
     showModalBottomSheet(
         context: context,
-        builder: (context){
+        builder: (context) {
           return Container(
             height: 600,
             //color: Colors.red,
             child: Center(
               child: OpenStreetMapSearchAndPick(
-                center: LatLong(50.6371, 3.0530),
+                  center: LatLong(50.6371, 3.0530),
                   buttonColor: Colors.blue,
                   buttonText: 'Set Current Location',
                   onPicked: (pickedData) {
-                    ShowDialog(context,pickedData);
+                    ShowDialog(context, pickedData);
                   }),
             ),
           );
         });
   }
-  void ShowDialog(BuildContext context,PickedData pickedData)
-  {
+
+  void ShowDialog(BuildContext context, PickedData pickedData) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Confirmation"),
-          content: Text("Confimez-vous la position choisie ? (${pickedData.address})"),
+          content: Text(
+              "Confimez-vous la position choisie ? (${pickedData.address})"),
           actions: [
             TextButton(
               child: const Text("Annuler"),
@@ -198,12 +264,14 @@ class _ProfilState extends State<Profil> {
             TextButton(
               child: const Text("Oui"),
               onPressed: () {
-                pickedLatitude=pickedData.latLong.latitude;
-                pickedLongitude=pickedData.latLong.longitude;
+                pickedLatitude = pickedData.latLong.latitude;
+                pickedLongitude = pickedData.latLong.longitude;
                 Navigator.pop(context);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Votre stand est désormais placé à l'adresse: ${pickedData.address}")),
+                  SnackBar(
+                      content: Text(
+                          "Votre stand est désormais placé à l'adresse: ${pickedData.address}")),
                 );
               },
             ),
@@ -211,7 +279,6 @@ class _ProfilState extends State<Profil> {
         );
       },
     );
-
   }
 
   @override
@@ -236,109 +303,111 @@ class _ProfilState extends State<Profil> {
           title: const Text('Gérer mes stands'),
           backgroundColor: const Color(0xFFE19F0C),
         ),
-        body : Center(
+        body: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: StreamBuilder(stream:FirebaseFirestore.instance
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
                       .collection('stand')
                       .where('userid', isEqualTo: currentUser?.uid)
                       .snapshots(),
-                      builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
-                        if(!snapshot.hasData){
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        return Container(
-                          height: MediaQuery.of(context).size.height/2,
-                          width: MediaQuery.of(context).size.width*3/4,
-                          child: ListView(
-                            children: snapshot.data!.docs.map((snap){
-                              String id = snap.id;
-                              return Card(
-                                child: ListTile(
-                                  title: Text(snap['description'].toString()),
-                                  subtitle: Text(snap['mot-cles'].toString()),
-                                  trailing: SizedBox(
-                                    width: 80,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: IconButton(
-                                            icon: const Icon(Icons.edit_outlined),
-                                            onPressed: () {
-                                              // Define the edit function here
-                                              _showEditForm(context,id);
-                                              // find a way to pass id
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: IconButton(
-                                            icon: const Icon(Icons.delete_forever_outlined),
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: const Text("Confirmation"),
-                                                    content: const Text("Are you sure you want to delete this item?"),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        child: const Text("Cancel"),
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                      ),
-                                                      TextButton(
-                                                        child: const Text("Delete"),
-                                                        onPressed: () {
-                                                          FirebaseFirestore.instance.collection('stand').doc(snap.id).delete();
-                                                          // Define the delete function here
-                                                          // e.g. FirebaseFirestore.instance.collection('documents').doc(snap.id).delete();
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width * 3 / 4,
+                      child: ListView(
+                        children: snapshot.data!.docs.map((snap) {
+                          String id = snap.id;
+                          return Card(
+                            child: ListTile(
+                              title: Text(snap['description'].toString()),
+                              subtitle: Text(snap['mot-cles'].toString()),
+                              trailing: SizedBox(
+                                width: 80,
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: IconButton(
+                                        icon: const Icon(Icons.edit_outlined),
+                                        onPressed: () {
+                                          // Define the edit function here
+                                          _showEditForm(context, id);
+                                          // find a way to pass id
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: IconButton(
+                                        icon: const Icon(
+                                            Icons.delete_forever_outlined),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title:
+                                                    const Text("Confirmation"),
+                                                content: const Text(
+                                                    "Are you sure you want to delete this item?"),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: const Text("Cancel"),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: const Text("Delete"),
+                                                    onPressed: () {
+                                                      FirebaseFirestore.instance
+                                                          .collection('stand')
+                                                          .doc(snap.id)
+                                                          .delete();
+                                                      // Define the delete function here
+                                                      // e.g. FirebaseFirestore.instance.collection('documents').doc(snap.id).delete();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
                                               );
                                             },
-                                          ),
-                                        ),
-                                      ],
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              );
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }),
+            ),
 
-
-                            }).toList(),
-                          ),
-                        );
-
-                      }
-                  ),
-                ),
-
-                Text(text),
-                // const SizedBox(height: 30),
-                // Visibility(
-                //   visible: _isLoggedIn,
-                //   child: ElevatedButton(
-                //     onPressed: () async {
-                //       await FirebaseAuth.instance.signOut();
-                //     },
-                //     child: const Text("Signout"),
-                //   ),
-                // ),
-
-              ],
-            )
-        )
-    );
+            Text(text),
+            // const SizedBox(height: 30),
+            // Visibility(
+            //   visible: _isLoggedIn,
+            //   child: ElevatedButton(
+            //     onPressed: () async {
+            //       await FirebaseAuth.instance.signOut();
+            //     },
+            //     child: const Text("Signout"),
+            //   ),
+            // ),
+          ],
+        )));
   }
 }
-
