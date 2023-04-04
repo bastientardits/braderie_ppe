@@ -6,13 +6,13 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class popupMap extends StatefulWidget {
-  const popupMap({Key? key}) : super(key: key);
+class PopupMap extends StatefulWidget {
+  const PopupMap({Key? key}) : super(key: key);
   @override
-  State<popupMap> createState() => _popupMapState();
+  State<PopupMap> createState() => _PopupMapState();
 }
 
-class _popupMapState extends State<popupMap> {
+class _PopupMapState extends State<PopupMap> {
   List<DocumentSnapshot> documents = [];
   List<LatLng> coordinates = [];
   List<bool> me = [];
@@ -215,23 +215,42 @@ class _popupMapState extends State<popupMap> {
 
   }
 }
-
-class Popup extends StatelessWidget {
+class Popup extends StatefulWidget {
   final DocumentSnapshot document;
   FirebaseStorage storage = FirebaseStorage.instance;
   Popup({super.key, required this.document});
 
   @override
+  _PopupState createState() => _PopupState();
+}
+
+class _PopupState extends State<Popup> {
+  List<dynamic> pictures = [];
+
+  @override
+  void initState() {
+    super.initState();
+    pictures = widget.document["pictures"];
+  }
+
+  Future<void> deleteImage(int index) async {
+    String doc = pictures[index];
+    await widget.storage.ref().child(doc).delete();
+    pictures.removeAt(index);
+    widget.document.reference.update({"pictures": pictures});
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<dynamic> pictures = document["pictures"];
     return Container(
       height: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(document['description'].toString()),
-          Text(document['mot-cles'].toString()),
-          Text(document['address'].toString()),
+          Text(widget.document['description'].toString()),
+          Text(widget.document['mot-cles'].toString()),
+          Text(widget.document['address'].toString()),
           SizedBox(
             height: 100,
             child: ListView.builder(
@@ -240,7 +259,7 @@ class Popup extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 String doc = pictures[index];
                 return FutureBuilder(
-                  future: storage.ref().child(doc).getDownloadURL(),
+                  future: widget.storage.ref().child(doc).getDownloadURL(),
                   builder: (context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
@@ -250,8 +269,20 @@ class Popup extends StatelessWidget {
                     }
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Image.network(snapshot.data.toString(),
-                          height: 100, width: 100),
+                      child: Stack(
+                        children: [
+                          Image.network(snapshot.data.toString(),
+                              height: 100, width: 100),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () => deleteImage(index),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );
@@ -263,7 +294,3 @@ class Popup extends StatelessWidget {
     );
   }
 }
-
-
-
-
