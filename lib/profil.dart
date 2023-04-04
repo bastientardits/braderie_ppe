@@ -78,24 +78,33 @@ class _ProfilState extends State<Profil> {
                   border: OutlineInputBorder(),
                   labelText: 'Mots-clés',
                 ),
-                child: Wrap(
-                  spacing: 8.0,
-                  runSpacing: 4.0,
-                  children: _keywords.map((String keyword) {
-                    return ChoiceChip(
-                      label: Text(keyword),
-                      selected: _selectedKeywords.contains(keyword),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          if (selected) {
-                            _selectedKeywords.add(keyword);
-                          } else {
-                            _selectedKeywords.remove(keyword);
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width / 2,
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _keywords.map((String keyword) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: ChoiceChip(
+                            label: Text(keyword),
+                            selected: _selectedKeywords.contains(keyword),
+                            onSelected: (bool selected) {
+                              setState(() {
+                                if (selected) {
+                                  _selectedKeywords.add(keyword);
+                                } else {
+                                  _selectedKeywords.remove(keyword);
+                                }
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),

@@ -46,6 +46,7 @@ class _formulaireStandState extends State<formulaireStand> {
   double pickedLatitude=0.1;
 
   String _description="";
+  String pickedAddress= "";
 
 
   Future<void> _pickImage(ImageSource source) async {
@@ -270,6 +271,7 @@ class _formulaireStandState extends State<formulaireStand> {
                           FirebaseFirestore.instance
                               .collection('stand')
                               .add({
+                            "address" : pickedAddress,
                             "latitude": pickedLatitude,
                             "longitude": pickedLongitude,
                             "pictures": _pictures,
@@ -362,6 +364,7 @@ class _formulaireStandState extends State<formulaireStand> {
               onPressed: () {
                 pickedLatitude=pickedData.latLong.latitude;
                 pickedLongitude=pickedData.latLong.longitude;
+                pickedAddress= pickedData.address;
                 Navigator.pop(context);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(

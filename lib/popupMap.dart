@@ -221,17 +221,40 @@ class Popup extends StatelessWidget {
   FirebaseStorage storage = FirebaseStorage.instance;
   Popup({super.key, required this.document});
 
+  String formatAddress(String address) {
+    if (address.contains(', Lille,')) {
+      final index = address.indexOf(', Lille,');
+      return address.substring(0, index + 7);
+    }
+    else {
+      return address;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<dynamic> pictures = document["pictures"];
-    return Container(
-      height: 200,
+    return SizedBox(
+      height: 220,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(document['description'].toString()),
-          Text(document['mot-cles'].toString()),
-          Text(document['address'].toString()),
+          const Text(
+            "Informations du stand",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Center(child: Text("description : ${document['description']}")),
+          const SizedBox(height: 8),
+          Center(child: Text("articles: ${document['mot-cles']}")),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Text(formatAddress(document['address'].toString())),
+          ),
           SizedBox(
             height: 100,
             child: ListView.builder(
@@ -261,6 +284,7 @@ class Popup extends StatelessWidget {
         ],
       ),
     );
+
   }
 }
 
