@@ -241,6 +241,16 @@ class _ProfilState extends State<Profil> {
                   FirebaseFirestore.instance.collection('stand').doc(id).update(
                       {"pictures": pictures});
 
+                  DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection(
+                      'stand').doc(id).get();
+                  Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+                  String defaultDescription = data?['description'] ?? 'Default Description';
+                  _selectedKeywords = List<String>.from(data?['mot-cles']);
+                  setState(() {
+                    pictures=[];
+                    pictures = data?['pictures'];
+                  });
+
                 } else {
                   FirebaseFirestore.instance
                       .collection('stand')
@@ -263,6 +273,17 @@ class _ProfilState extends State<Profil> {
                   }
                   FirebaseFirestore.instance.collection('stand').doc(id).update(
                       {"pictures": pictures});
+
+                  DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection(
+                      'stand').doc(id).get();
+                  Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+                  String defaultDescription = data?['description'] ?? 'Default Description';
+                  _selectedKeywords = List<String>.from(data?['mot-cles']);
+                  setState(() {
+                    pictures=[];
+                    pictures = data?['pictures'];
+                  });
+
                 }
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
