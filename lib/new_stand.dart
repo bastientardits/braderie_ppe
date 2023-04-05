@@ -73,23 +73,26 @@ class _formulaireStandState extends State<formulaireStand> {
     }
   }
 
-  Future uploadPic(BuildContext context) async{
+  Future uploadPic(BuildContext context, List<String> _pictures) async{
+
     for(File _image in _images) {
       String fileName = basename(_image.path);
       int size=_images.length;
-      print("Nombre d'images choisies =$size");
+
 
       String res = "${FirebaseAuth.instance.currentUser!.uid}/$fileName";
-      _pictures.add(res);
+
+        _pictures.add(res);
+
+
       Reference reference = storage.ref().child(res);
       UploadTask uploadTask = reference.putFile(_image);
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
       imageUrl = await reference.getDownloadURL();
 
-      setState(() {
-        // print("picture uploaded");
-      });
+
     }
+
   }
 
   @override
@@ -269,8 +272,7 @@ class _formulaireStandState extends State<formulaireStand> {
                         if (_formKey.currentState!.validate() && _isLoggedIn!=false) {
                           // If the form is valid, display a snackbar.
                           _submitForm();
-                          uploadPic(context);
-                          FirebaseFirestore.instance
+                          uploadPic(context, _pictures).then((_) => FirebaseFirestore.instance
                               .collection('stand')
                               .add({
                             "address" : pickedAddress,
@@ -280,7 +282,8 @@ class _formulaireStandState extends State<formulaireStand> {
                             "userid": FirebaseAuth.instance.currentUser?.uid.toString(),
                             "description" : _description,
                             "mot-cles" : _selectedKeywords,
-                          });
+                          }));
+
                           _formKey.currentState!.reset();
                           setState(() {
                             _selectedKeywords= [];

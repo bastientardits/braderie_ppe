@@ -167,7 +167,7 @@ class _ProfilState extends State<Profil> {
               SizedBox(
                 height: 100,
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
+                  scrollDirection: Axis.horizontal,
                   child: Row(
                     children: pictures
                         .map(

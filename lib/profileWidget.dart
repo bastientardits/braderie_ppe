@@ -4,7 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileWidget extends StatelessWidget {
   @override
+
+
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -19,10 +22,8 @@ class ProfileWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 30),
-          boutonProfil(context, 'Mon Profil'),
-          boutonStatistiques(context, 'Statistiques'),
-          boutonProfil(context, 'Paramètres'),
           boutonStands(context, 'Mes stands'),
+          SizedBox(height: 40),
           boutonLogout(context, 'Se déconnecter'),
         ],
       ),
@@ -45,37 +46,6 @@ class ProfileWidget extends StatelessWidget {
     );
   }
 
-  Widget boutonStatistiques(BuildContext context, String title) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text(title),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget boutonParametres(BuildContext context, String title) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text(title),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget boutonStands(BuildContext context, String title) {
     return Padding(
@@ -107,7 +77,7 @@ class ProfileWidget extends StatelessWidget {
             },
           child: Text(title),
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Color(0xFFE19F0C),
+            foregroundColor: Colors.white, backgroundColor: Color(0xFFA1161B),
           ),
         ),
       ),

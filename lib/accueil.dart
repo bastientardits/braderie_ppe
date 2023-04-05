@@ -40,7 +40,7 @@ class _accueilState extends State<accueil> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Braderies pour vous'),
+        title: const Text('Braderies autour de vous'),
         backgroundColor: const Color(0xFFE19F0C),
         automaticallyImplyLeading: false,
       ),
