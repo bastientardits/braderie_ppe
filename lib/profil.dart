@@ -216,14 +216,24 @@ class _ProfilState extends State<Profil> {
                                                             child: const Text(
                                                                 "Oui"),
                                                             onPressed: () {
-                                                                deleteImage(index, id).then((_) {
-                                                                  setState(() {pictures.removeAt(index);
+                                                              deleteImage(
+                                                                      index, id)
+                                                                  .then((_) {
+                                                                setState(() async {
+                                                                  pictures.removeAt(index);
+                                                                  DocumentSnapshot snapshot =
+                                                                      await FirebaseFirestore.instance.collection('stand').doc(id).get();
+                                                                  Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+                                                                  String defaultDescription = data?['description'] ?? 'Default Description';
+                                                                  _selectedKeywords = List<String>.from(data?['mot-cles']);
+                                                                  setState(() {
+                                                                    pictures = data?['pictures'];
                                                                   });
                                                                 });
-                                                                Navigator.pop(
-                                                                    context);
-        }
-                                                        ),
+                                                              });
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }),
                                                       ],
                                                     );
                                                   },
