@@ -76,6 +76,8 @@ class _formulaireStandState extends State<formulaireStand> {
   Future uploadPic(BuildContext context) async{
     for(File _image in _images) {
       String fileName = basename(_image.path);
+      int size=_images.length;
+      print("Nombre d'images choisies =$size");
 
       String res = "${FirebaseAuth.instance.currentUser!.uid}/$fileName";
       _pictures.add(res);
