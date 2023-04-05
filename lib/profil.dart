@@ -191,41 +191,43 @@ class _ProfilState extends State<Profil> {
                                     Image.network(snapshot.data.toString(),
                                         height: 100, width: 100),
                                     Positioned(
-                                      top: 0,
-                                      left: 0,
-                                      child: IconButton(
-                                          icon: Icon(Icons.delete),
-                                          onPressed: () =>   showDialog(
-                                  context: context,
-        builder: (context) {
-
-                                              return AlertDialog(
-                                                title:
-                                                    const Text("Confirmation"),
-                                                content: const Text(
-                                                    "Voulez vous vraiment supprimer ?"),
-                                                actions: [
-                                                  TextButton(
-                                                    child:
-                                                        const Text("Annuler"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: const Text("Oui"),
-                                                    onPressed: () =>
-                                                      deleteImage(index, id).then((_) {
-                                                        setState(() {
-                                                          pictures.removeAt(index);
-                                                        });
-                                                      })
-                                                  ),
-                                                ],
-                                              );
-                                  },
-                                  ))
-                                    ),
+                                        top: 0,
+                                        left: 0,
+                                        child: IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () => showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          "Confirmation"),
+                                                      content: const Text(
+                                                          "Voulez vous vraiment supprimer ?"),
+                                                      actions: [
+                                                        TextButton(
+                                                          child: const Text(
+                                                              "Annuler"),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                        TextButton(
+                                                            child: const Text(
+                                                                "Oui"),
+                                                            onPressed: () {
+                                                                deleteImage(index, id).then((_) {
+                                                                  setState(() {pictures.removeAt(index);
+                                                                  });
+                                                                });
+                                                                Navigator.pop(
+                                                                    context);
+        }
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                ))),
                                   ],
                                 ),
                               );
