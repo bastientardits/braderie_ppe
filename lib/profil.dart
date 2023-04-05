@@ -195,7 +195,11 @@ class _ProfilState extends State<Profil> {
                                       left: 0,
                                       child: IconButton(
                                           icon: Icon(Icons.delete),
-                                          onPressed: () => AlertDialog(
+                                          onPressed: () =>   showDialog(
+                                  context: context,
+        builder: (context) {
+
+                                              return AlertDialog(
                                                 title:
                                                     const Text("Confirmation"),
                                                 content: const Text(
@@ -218,7 +222,9 @@ class _ProfilState extends State<Profil> {
                                                       })
                                                   ),
                                                 ],
-                                              )),
+                                              );
+                                  },
+                                  ))
                                     ),
                                   ],
                                 ),
